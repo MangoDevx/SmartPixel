@@ -1,0 +1,41 @@
+﻿<Window x:Class="SmartPixel.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vms="clr-namespace:SmartPixel"
+        xmlns:primitives="clr-namespace:System.Windows.Controls.Ribbon.Primitives;assembly=System.Windows.Controls.Ribbon"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="461" Width="821"
+        Background="SlateGray">
+
+    <Window.DataContext>
+        <vms:FormModel/>
+    </Window.DataContext>
+
+    <Grid>
+        <Image Height="360" Margin="152,55,8,19" Width="640" Source="{Binding Path}"/>
+        <Button Content="Start" Command="{Binding StartSmartPixelCommand}"  HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="50" />
+        <Button Content="Convert" Command="{Binding ConvertCommand}"  HorizontalAlignment="Left" Margin="65,10,0,0" VerticalAlignment="Top" />
+        <Button Content="Generate Palette" Command="{Binding GeneratePaletteCommand}" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="101"/>
+        <Button Content="Generate Grayscale" Command="{Binding GenerateGrayPaletteCommand}" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Width="115"/>
+        <UniformGrid Margin="10,85,675,255" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[0], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[1], Converter={StaticResource ColorBrushConverter}}"  Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[2], Converter={StaticResource ColorBrushConverter}}"  Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[3], Converter={StaticResource ColorBrushConverter}}"  Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[4], Converter={StaticResource ColorBrushConverter}}"  Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[5], Converter={StaticResource ColorBrushConverter}}"  Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[6], Converter={StaticResource ColorBrushConverter}}"  Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[7], Converter={StaticResource ColorBrushConverter}}"  Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[8], Converter={StaticResource ColorBrushConverter}}"  Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[9], Converter={StaticResource ColorBrushConverter}}"  Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[10], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[11], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[12], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[13], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[14], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[15], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
+        </UniformGrid>
+    </Grid>
+</Window>
