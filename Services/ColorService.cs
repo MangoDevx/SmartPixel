@@ -37,9 +37,7 @@ namespace SmartPixel.Services
 
         private int ColorDiff(Color c1, Color c2)
         {
-            return (int)Math.Sqrt((c1.R - c2.R) * (c1.R - c2.R)
-                                     + (c1.G - c2.G) * (c1.G - c2.G)
-                                     + (c1.B - c2.B) * (c1.B - c2.B));
+            return (int)Math.Sqrt(Math.Pow((c1.R - c2.R), 2) + Math.Pow((c1.G - c2.G), 2) + Math.Pow((c1.B - c2.B), 2));
         }
     }
 }
