@@ -1,9 +1,11 @@
-﻿using SmartPixel.Services;
+﻿using SmartPixel.Extensions;
+using SmartPixel.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows.Media;
 using Color = System.Drawing.Color;
 
 namespace SmartPixel
@@ -12,7 +14,9 @@ namespace SmartPixel
     {
         private string _path;
         private readonly FormService _formService;
+        private int _colors = 20;
         private List<Color> _colorPalette = new List<Color>();
+        private List<SolidColorBrush> _visualColorPalette = new List<SolidColorBrush>();
 
         public Relays StartSmartPixelCommand { get; private set; }
         public Relays ConvertCommand { get; private set; }
@@ -55,6 +59,28 @@ namespace SmartPixel
             }
         }
 
+        public string Colors
+        {
+            get => $"{_colors}";
+            set
+            {
+                if (_colors.ToString() == value) return;
+                _colors = int.Parse(value);
+                RaisePropertyChanged("Colors");
+            }
+        }
+
+        public List<SolidColorBrush> VisualColorPalette
+        {
+            get => _visualColorPalette;
+            set
+            {
+                if (_visualColorPalette == value) return;
+                _visualColorPalette = value;
+                RaisePropertyChanged("VisualColorPalette");
+            }
+        }
+
         private void StartSp(object input)
         {
             var path = _formService.StartSmartPixel();
@@ -70,14 +96,22 @@ namespace SmartPixel
 
         private void GeneratePalette(object input)
         {
-            var palette = _formService.GenerateColorPalette().ToList();
+            var palette = _formService.GenerateColorPalette(_colors).ToList();
             ColorPalette = palette;
+            GenerateVisualColorPalette();
         }
 
         private void GenerateGrayPalette(object input)
         {
             var palette = _formService.GenerateGrayColorPalette().ToList();
             ColorPalette = palette;
+            GenerateVisualColorPalette();
+        }
+
+        private void GenerateVisualColorPalette()
+        {
+            var newVisualColorPalette = ColorPalette.Select(color => color.ConvertToMedia()).Select(mediaColor => new SolidColorBrush(mediaColor)).ToList();
+            VisualColorPalette = newVisualColorPalette;
         }
 
         private bool CanFireCommand(object input)

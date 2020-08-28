@@ -66,10 +66,10 @@ namespace SmartPixel.Services
         }
 
         // Generates a random color palette. Could be bad, could be good.
-        public IEnumerable<Color> GenerateColorPalette()
+        public IEnumerable<Color> GenerateColorPalette(int amount)
         {
             var palette = new List<Color>();
-            for (var i = 0; i < 20; i++)
+            for (var i = 0; i < amount; i++)
             {
                 var color = _cgs.GetNextColor(palette);
                 palette.Add(color);
