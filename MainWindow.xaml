@@ -22,7 +22,7 @@
         <Button Content="Convert" Command="{Binding ConvertCommand}"  HorizontalAlignment="Left" Margin="65,10,0,0" VerticalAlignment="Top" />
         <Button Content="Generate Palette" Command="{Binding GeneratePaletteCommand}" HorizontalAlignment="Left" Margin="10,35,0,0" VerticalAlignment="Top" Width="101"/>
         <Button Content="Generate Grayscale" Command="{Binding GenerateGrayPaletteCommand}" HorizontalAlignment="Left" Margin="10,60,0,0" VerticalAlignment="Top" Width="115"/>
-        <UniformGrid Margin="10,85,0,0" VerticalAlignment="Top" HorizontalAlignment="Left">
+        <UniformGrid Margin="10,85,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Height="97" Columns="5">
             <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[0], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
             <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[1], Converter={StaticResource ColorBrushConverter}}"  Width="20"/>
             <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[2], Converter={StaticResource ColorBrushConverter}}"  Width="20"/>
@@ -39,6 +39,10 @@
             <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[13], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
             <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[14], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
             <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[15], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[16], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[17], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[18], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
+            <Rectangle Height="20" Stroke="Black" Fill="{Binding ColorPalette[19], Converter={StaticResource ColorBrushConverter}}" Width="20"/>
         </UniformGrid>
     </Grid>
 </Window>

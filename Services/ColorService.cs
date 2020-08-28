@@ -7,16 +7,20 @@ namespace SmartPixel.Services
 {
     public class ColorService
     {
-        public Color GetNextColor()
+        public Color GetNextColor(List<Color> palette)
         {
             var random = new Random();
             var colorBytes = new byte[3];
-            // Selects a color value with byte 0 - 155 then adds 100 to it. Min Value: 100 Max Value: 255
-            colorBytes[0] = (byte)(random.Next(156) + 100);
-            colorBytes[1] = (byte)(random.Next(156) + 100);
-            colorBytes[2] = (byte)(random.Next(156) + 100);
+            Color finalColor;
+            do
+            {
+                colorBytes[0] = (byte)random.Next(256);
+                colorBytes[1] = (byte)random.Next(256);
+                colorBytes[2] = (byte)random.Next(156);
+                finalColor = Color.FromArgb(colorBytes[0], colorBytes[1], colorBytes[2]);
+            } while (finalColor.R == finalColor.G && finalColor.G == finalColor.B && palette.Any(x => x.Equals(finalColor)));
 
-            return Color.FromArgb(colorBytes[0], colorBytes[1], colorBytes[2]);
+            return finalColor;
         }
 
         public Color GetNextGrayColor()
@@ -31,6 +35,7 @@ namespace SmartPixel.Services
         // Stack overflow OP. Modified distance formula for the RGB of the selected color vs target color
         public Color SelectClosestColor(List<Color> colors, Color targetColor)
         {
+            if (targetColor.A == 0) return Color.Transparent;
             var colorDiffs = colors.Select(n => ColorDiff(n, targetColor)).Min(n => n);
             return colors[colors.FindIndex(n => ColorDiff(n, targetColor) == colorDiffs)];
         }

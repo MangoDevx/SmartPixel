@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SmartPixel": {
+      "commandName": "Project",
+      "nativeDebugging": true
+    }
+  }
+}

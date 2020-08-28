@@ -1,4 +1,5 @@
 ﻿using SmartPixel.Services;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -58,6 +59,7 @@ namespace SmartPixel
         {
             var path = _formService.StartSmartPixel();
             Path = path;
+            GC.Collect();
         }
 
         private void ConvertSp(object input)

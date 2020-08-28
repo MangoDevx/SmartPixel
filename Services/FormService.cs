@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Threading.Tasks;
 using Color = System.Drawing.Color;
 
 namespace SmartPixel.Services
@@ -23,28 +24,44 @@ namespace SmartPixel.Services
         {
             if (string.IsNullOrEmpty(path)) return string.Empty;
             var uploadedImg = Image.FromFile(path);
-            var uploadedBit = new DirectBitmap(uploadedImg);
+            var uploadedBit = new Bitmap(uploadedImg);
             uploadedImg.Dispose();
-            var newBit = new DirectBitmap(uploadedBit.Width, uploadedBit.Height);
-
-            for (var x = 1; x <= uploadedBit.Width; ++x)
+            unsafe
             {
-                for (var y = 1; y <= uploadedBit.Height; ++y)
+                var uploadedBitData = uploadedBit.LockBits(new Rectangle(0, 0, uploadedBit.Width, uploadedBit.Height), ImageLockMode.ReadWrite, uploadedBit.PixelFormat);
+                var bytesPerPixel = Image.GetPixelFormatSize(uploadedBit.PixelFormat) / 8;
+                var heightPx = uploadedBitData.Height;
+                var widthBytes = uploadedBitData.Width * bytesPerPixel;
+                var ptrFirstPx = (byte*)uploadedBitData.Scan0;
+
+                Parallel.For(0, heightPx, y =>
                 {
-                    var targetPixel = uploadedBit.Bitmap.GetPixel(x - 1, y - 1);
-                    var targetColor = ReturnClosestColor(targetPixel, palette);
-                    newBit.SetPixel(x - 1, y - 1, targetColor);
-                }
+                    var currentLine = ptrFirstPx + (y * uploadedBitData.Stride);
+                    for (var x = 0; x < widthBytes; x += bytesPerPixel)
+                    {
+                        int originalA = currentLine[x + 3];
+                        int originalR = currentLine[x];
+                        int originalG = currentLine[x + 1];
+                        int originalB = currentLine[x + 2];
+                        var originalColor = Color.FromArgb(originalR, originalG, originalB);
+                        var closestColor = ReturnClosestColor(originalColor, palette);
+                        currentLine[x + 3] = (byte)originalA;
+                        currentLine[x] = closestColor.R;
+                        currentLine[x + 1] = closestColor.G;
+                        currentLine[x + 2] = closestColor.B;
+                    }
+                });
+                uploadedBit.UnlockBits(uploadedBitData);
             }
-            uploadedBit.Dispose();
+
 
             var time = $"{DateTimeOffset.Now.Day}{DateTimeOffset.Now.Hour}{DateTimeOffset.Now.Minute}{DateTimeOffset.Now.Second}";
             if (!Directory.Exists($@"{Environment.CurrentDirectory}\GeneratedImages"))
             {
                 Directory.CreateDirectory($@"{Environment.CurrentDirectory}\GeneratedImages");
             }
-            newBit.Bitmap.Save($@"{Environment.CurrentDirectory}\GeneratedImages\GENERATED{time}.png", ImageFormat.Png);
-            newBit.Dispose();
+            uploadedBit.Save($@"{Environment.CurrentDirectory}\GeneratedImages\GENERATED{time}.png", ImageFormat.Png);
+            uploadedBit.Dispose();
             return @$"{Environment.CurrentDirectory}\GeneratedImages\GENERATED{time}.png";
         }
 
@@ -52,9 +69,9 @@ namespace SmartPixel.Services
         public IEnumerable<Color> GenerateColorPalette()
         {
             var palette = new List<Color>();
-            for (var i = 0; i < 16; i++)
+            for (var i = 0; i < 20; i++)
             {
-                var color = _cgs.GetNextColor();
+                var color = _cgs.GetNextColor(palette);
                 palette.Add(color);
             }
             return palette;
@@ -64,7 +81,7 @@ namespace SmartPixel.Services
         public IEnumerable<Color> GenerateGrayColorPalette()
         {
             var palette = new List<Color>();
-            for (var i = 0; i < 16; i++)
+            for (var i = 0; i < 20; i++)
             {
                 var color = _cgs.GetNextGrayColor();
                 palette.Add(color);
