@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -12,6 +13,7 @@ namespace SmartPixel.Services
     public class FormService
     {
         private readonly ColorService _cgs = new ColorService();
+        private readonly Stopwatch _sw = new Stopwatch();
 
         public string StartSmartPixel()
         {
@@ -23,6 +25,7 @@ namespace SmartPixel.Services
         public string SmartPixelConvert(string path, List<Color> palette)
         {
             if (string.IsNullOrEmpty(path)) return string.Empty;
+            _sw.Start();
             var uploadedImg = Image.FromFile(path);
             var uploadedBit = new Bitmap(uploadedImg);
             uploadedImg.Dispose();
@@ -62,7 +65,10 @@ namespace SmartPixel.Services
             }
             uploadedBit.Save($@"{Environment.CurrentDirectory}\GeneratedImages\GENERATED{time}.png", ImageFormat.Png);
             uploadedBit.Dispose();
-            return @$"{Environment.CurrentDirectory}\GeneratedImages\GENERATED{time}.png";
+            _sw.Stop();
+            var elapsedSeconds = _sw.ElapsedMilliseconds / 1000;
+            _sw.Reset();
+            return @$"{Environment.CurrentDirectory}\GeneratedImages\GENERATED{time}.png@{elapsedSeconds}";
         }
 
         // Generates a random color palette. Could be bad, could be good.
@@ -78,10 +84,10 @@ namespace SmartPixel.Services
         }
 
         // Generates a random color palette. Could be bad, could be good.
-        public IEnumerable<Color> GenerateGrayColorPalette()
+        public IEnumerable<Color> GenerateGrayColorPalette(int amount)
         {
             var palette = new List<Color>();
-            for (var i = 0; i < 20; i++)
+            for (var i = 0; i < amount; i++)
             {
                 var color = _cgs.GetNextGrayColor();
                 palette.Add(color);

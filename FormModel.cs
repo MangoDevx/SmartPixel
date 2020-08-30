@@ -15,6 +15,7 @@ namespace SmartPixel
         private string _path;
         private readonly FormService _formService;
         private int _colors = 20;
+        private string _elapsedSeconds = "N/A";
         private List<Color> _colorPalette = new List<Color>();
         private List<SolidColorBrush> _visualColorPalette = new List<SolidColorBrush>();
 
@@ -81,17 +82,31 @@ namespace SmartPixel
             }
         }
 
+        public string ElapsedSeconds
+        {
+            get => _elapsedSeconds;
+            set
+            {
+                if (_elapsedSeconds == value) return;
+                _elapsedSeconds = value;
+                RaisePropertyChanged("ElapsedSeconds");
+            }
+        }
+
         private void StartSp(object input)
         {
             var path = _formService.StartSmartPixel();
             Path = path;
             GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         private void ConvertSp(object input)
         {
-            var path = _formService.SmartPixelConvert(Path, _colorPalette);
-            Path = path;
+            var data = _formService.SmartPixelConvert(Path, _colorPalette);
+            var dataSplit = data.Split('@');
+            Path = dataSplit[0];
+            ElapsedSeconds = dataSplit[1] + "s";
         }
 
         private void GeneratePalette(object input)
@@ -103,7 +118,7 @@ namespace SmartPixel
 
         private void GenerateGrayPalette(object input)
         {
-            var palette = _formService.GenerateGrayColorPalette().ToList();
+            var palette = _formService.GenerateGrayColorPalette(_colors).ToList();
             ColorPalette = palette;
             GenerateVisualColorPalette();
         }
